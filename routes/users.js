@@ -17,10 +17,10 @@ router.get("/unsub/:id",verifyToken,unsunbscribe)
 
 
 //lke dis
-router.get("/like/:videoId",verifyToken,like)
+router.put("/like/:videoId",verifyToken,like)
 
 
-router.get("/dislike/:videoId",verifyToken,dislike)
+router.put("/dislike/:videoId",verifyToken,dislike)
 
 export default router;
 

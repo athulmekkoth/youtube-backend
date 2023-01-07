@@ -1,6 +1,7 @@
  
  import { createError } from "../err.js"
  import User from '../models/User.js'
+ import Video from '../models/Video.js'
  export   const update= async (req,res,next)=>{
   //router id===jwt id//from jst user=userid
   if(req.params.id===req.user.id)
@@ -23,7 +24,7 @@
  export   const deletes= async (req,res,next)=>{
   if(req.params.id===req.user.id)
   {
-    const updatedUser=await User.findByIdAndDeletes(req.params.id
+    const updatedUser=await User.findByIdAndDelete(req.params.id
      
       
       
@@ -75,6 +76,7 @@
   
  }
  export   const unsunbscribe=async(req,res,next)=>{
+
   try{
     await User.findById(req.user.id,{ //jwt id other channels route  
       $pull :{subscribedUsers:req.params.id}
@@ -91,9 +93,30 @@
   
     }
  }
- export   const like =(req,res,next)=>{
-  
- }
- export   const dislike =(req,res,next)=>{
-  
- }
+ export const like = async (req, res, next) => {
+  const id = req.user.id;
+  const videoId = req.params.videoId;
+  try {
+    await Video.findByIdAndUpdate(videoId,{
+      $addToSet:{likes:id},//why nooy push bcz copy
+      $pull:{dislikes:id}
+    })
+    res.status(200).json("The video has been liked.")
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const dislike = async (req, res, next) => {
+    const id = req.user.id;
+    const videoId = req.params.videoId;
+    try {
+      await Video.findByIdAndUpdate(videoId,{
+        $addToSet:{dislikes:id},
+        $pull:{likes:id}
+      })
+      res.status(200).json("The video has been disliked.")
+  } catch (err) {
+    next(err);
+  }
+};
