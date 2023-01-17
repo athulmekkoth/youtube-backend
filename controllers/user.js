@@ -2,25 +2,25 @@
  import { createError } from "../err.js"
  import User from '../models/User.js'
  import Video from '../models/Video.js'
- export   const update= async (req,res,next)=>{
-  //router id===jwt id//from jst user=userid
-  if(req.params.id===req.user.id)
-  {
-    const updatedUser=await User.findByIdAndUpdate(req.params.id,{
-      $set:req.body
-      
-    },{new:true}//update new name instead of test
-    )
-    res.status(200).json(updatedUser)
-     
+
+ export const update = async (req, res, next) => {
+  if (req.params.id === req.user.id) {
+    try {
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
+      res.status(200).json(updatedUser);
+    } catch (err) {
+      next(err);
+    }
+  } else {
+    return next(createError(403, "You can update only your account!"));
   }
-  else
-  {
-    return next(createError(403,"you can alter only your account"))
-  }
-  
- 
- }
+};
  export   const deletes= async (req,res,next)=>{
   if(req.params.id===req.user.id)
   {
@@ -39,23 +39,21 @@
   
  }
  export   const getuser=async (req,res,next)=>{
-  if(req.params.id===req.user.id)
-  {
-    const updatedUser=await User.findByIds(req.params.id
+  
+   try{ const updatedUser=await User.findById(req.params.id
       
       
      
     )
-    res.status(200).json("user has been find")
-     
-  }
-  else
-  {
-    return next(createError)
-  }
+    res.status(200).json(updatedUser)
+ }  catch (err) {
+  next(err);
+}
+  
+}
   
     
- }
+ 
  export   const subscribe=async(req,res,next)=>{
   
   try{
@@ -78,8 +76,8 @@
  export   const unsunbscribe=async(req,res,next)=>{
 
   try{
-    await User.findById(req.user.id,{ //jwt id other channels route  
-      $pull :{subscribedUsers:req.params.id}
+    await User.findByIdAndUpdate(req.user.id,{ //jwt id other channels route  
+      $pull:{subscribedUsers:req.params.id}
     }) 
     await User.findByIdAndUpdate(req.params.id,{
       $inc:{subscribers:-1},
@@ -120,3 +118,4 @@ export const dislike = async (req, res, next) => {
     next(err);
   }
 };
+

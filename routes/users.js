@@ -13,7 +13,7 @@ router.get("/find/:id",getuser)
 
 //subscibr
 router.put("/sub/:id",verifyToken,subscribe)
-router.get("/unsub/:id",verifyToken,unsunbscribe)
+router.put("/unsub/:id",verifyToken,unsunbscribe)
 
 
 //lke dis

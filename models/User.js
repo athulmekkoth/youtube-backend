@@ -14,7 +14,7 @@ import mongoose, { mongo } from "mongoose";
     },
     password:{
         type:String,
-        required:true,
+        
       
     },
     img:{
@@ -23,6 +23,11 @@ import mongoose, { mongo } from "mongoose";
     subscribers:{
         type:Number,
         default:0
+    },
+    fromGoogle:{
+        type:Boolean,
+        default:false
+
     },
     subscribedUsers:{
         type:[String]
